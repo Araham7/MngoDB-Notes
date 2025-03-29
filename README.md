@@ -18,11 +18,6 @@
 
 (8). `db.User.insertOne({ Name: "MummyJi" , children: ["Araham", "Arefa", "Aatefa"] })` // can simply use [] to add an array in the JSON of MongoDB.
 
-# (Q). How to see the count of documents in a collection?
-=> There is a count() function that we use see the count of documents in a collection.
-
-(9). `db.collectin_name.find().coun()` => This will print the count of documents in a collection.
-
 # (Q). How to import data in mongoDB without MongoDB Compass?
 
 To get some free sample datasets you can check out this Github link:
@@ -84,4 +79,68 @@ docker run --rm -it \
   --db my_database \  # Specify the target database name where you want to store the json-file(data.json).
   --collection new_weather_data \  # Specify the target collection_name where data will be inserted
   --file /data/data.json  # Path to the JSON file inside the container (mapped from ~/Downloads), Here `data.json` is the json file that we want to import on the mongoDB dataBase.
+```
+
+## Let's explore the DB we imported
+
+# 9.(Q). How to see the count of documents in a collection?
+
+There is a `count()` function that we can use t count the documents.
+
+```bash
+db.collectionName.find().count();
+```
+
+# 10.(Q). How to handle the printing of huge amounts of data?
+
+If you have a huge amount of data, just like we have here approx 10,000 documents, if you try to execute db.collectionName.find in your mongosh then will not print all the 10,000 records, becuase it cannot handle that in the shell. If you try it then in the console, it will print some data and then gives you a prompt of Try "it" for more.
+
+<img src="./Images/first_part_of_gt_data.png" alt="greate_amount_of_data" width="300">
+
+If you write it and press enter then you will get next group of data.
+
+<img src="./Images/next_part_of_gt_data.png" alt="greate_amount_of_data" width="300">
+
+
+# 11.(Q). How to get a certain number of documents?
+
+We can use a function called as `.limit(no_of_records_to_fetch)`.
+
+```bash
+db.collectionName.find().limit(no_of_records_to_fetch);
+```
+
+# 12.(Q). How to set an `offset` while querying data?
+
+We can set an offset using the skip function. Using the `skip()` function we can skip some records and then start fetching records post the skip.
+
+```bash
+db.collectionName.find().skip(5).limit(3)  # Skips the first 5 documents and retrieves up to 3 documents
+```
+
+# 12.(Q). How to filter the records while querying data?
+
+To filter the records, we can pass an object in the arguments of the `find()` function, where we can add out conditions.
+
+```bash
+db.collectionName.find({key1: value1, key2: value2})
+```
+
+example : `db.new_weather_data.find({type: 'FM-13'}).count();`
+
+# 13. Projections 
+If we want to not get all the properties of the JSON, and instead get some
+specific key-value pairs, this process is called Projection. In the world of
+SQL, if you do SELECT * FROM TABLE; then you get all the columns but if you
+do SELECT name, address FROM TABLE; you only get name and address. This 
+same thing is achieved in Projections.
+
+### `How to do projections?`
+
+So the first argument of the find function is an object which takes filtration
+criteria. It can accept another argument as an object, where we can write
+whatever properties we have to include and assign them a value true.
+
+```bash
+db.new_weather_data.find({type: 'FM-13'}, {position: true, visibility: true}) # This will print o
 ```
