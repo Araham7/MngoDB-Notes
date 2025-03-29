@@ -129,18 +129,68 @@ db.collectionName.find({key1: value1, key2: value2})
 example : `db.new_weather_data.find({type: 'FM-13'}).count();`
 
 # 13. Projections 
-If we want to not get all the properties of the JSON, and instead get some
-specific key-value pairs, this process is called Projection. In the world of
-SQL, if you do SELECT * FROM TABLE; then you get all the columns but if you
-do SELECT name, address FROM TABLE; you only get name and address. This 
+If we want to not get all the properties of the JSON, and instead get some specific key-value pairs, this process is called Projection. In the world of SQL, if you do SELECT * FROM TABLE; then you get all the columns but if you do SELECT name, address FROM TABLE; you only get name and address. This 
 same thing is achieved in Projections.
 
 ### `How to do projections?`
 
-So the first argument of the find function is an object which takes filtration
-criteria. It can accept another argument as an object, where we can write
-whatever properties we have to include and assign them a value true.
+So the first argument of the find function is an object which takes filtration criteria. It can accept another argument as an object, where we can write whatever properties we have to include and assign them a value true.
 
 ```bash
-db.new_weather_data.find({type: 'FM-13'}, {position: true, visibility: true}) # This will print o
+db.collectionName.find({filter1: value1...}, {property1: true, property2: true....});
 ```
+
+example:
+(a) `db.new_weather_data.find({type: 'FM-13'}, {position: true, visibility: true});` => Ye sirf wahi ke documents ka `psition` aur `visibility` fields ko dega  dega jisme `type: 'FM-13'` key-value pairs ho.
+
+(b).You can also pass the first argument as an empty JSON object. 
+`db.new_weather_data.find({}, {position: true, visibility: true});`=>
+
+(c).  If we want to manually exclude specific properties, you can write their names with false value allocated:
+`db.new_weather_data.find({}, {skyConditionObservation: false, pastWeatherObservationManual: false});`=> Now this will bring everything apart from `pastWeatherObservationManual` and `skyConditionObservation`.
+
+# 14. How to `delete some document`?
+If we want to delete some documents we can use functions like `deleteOne()` , `deleteMany()` and `findByIdAndDelete()` .
+
+
+### (a). `deleteOne()`
+```bash
+db.collectionName.deleteOne({filter1: value1, filter2:value2..});
+```
+
+example: 
+`db.new_weather_data.deleteOne({st :"x+43400-065600"});` => this will delete the one document from the `new_weather_data` which is having `{st :"x+43400-065600"}` key-value pairs.
+
+### (b). `deleteMany()`
+```bash
+db.collectionName.deleteMany({filter1: value1, filter2: value2..});
+```
+
+example:
+`db.new_weather_data.deleteMany({callLetters:'FNPG'});` => This will delete all the documents which is having `{callLetters:'FNPG'}` key-value pairs.
+
+### (c). `findOneAndDelete()`
+```
+db.new_weather_data.findOneAndDelete({ _id: ObjectId("Id_that_you_want_to_delete") });
+```
+
+example:
+`db.new_weather_data.findOneAndDelete({ _id: ObjectId("5553a998e4b02cf7151190dc") });` => This will delete one documents which is having `_id: ObjectId("5553a998e4b02cf7151190dc"`.
+
+
+# 15. How to `update a record`?
+
+To Update records we can use `updateOne` , `updateMany` and a few similar
+functions. These functions take `two arguments` which are as follows :---
+
+(a). first argument is Filtration criteria viz. how to filter what data to update.
+(b). second argument is With what values we should update.(and befor using the second argument we mus have to use mongoDB_operator`$operator`)
+
+```bash
+db.collectionName.updateOne({filter1: value1}, {$operator:{key1: value1, key2: value2...}})
+```
+
+Now MongoDB provides us some operators for these updates for example:
+- $set -> This will allocate the value to the key directly passed in the object.
+- $inc -> This will increment the value in the key.
+
